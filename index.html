@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>أسئلة رسبكت</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&family=Noto+Kufi+Arabic:wght@100..900&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+              font-family: "Noto Kufi Arabic", sans-serif;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: radial-gradient(ellipse at center, #1d0e30 0%, #1d0e30 30%, #1d0e30 70%, #1d0e30 100%);
+            color: #fff;
+            min-height: 100vh;
+            direction: rtl;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* تأثير الجسيمات الخلفية */
+        .particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(97, 62, 105, 0.8) 0%, rgba(138, 43, 226, 0.4) 50%, transparent 100%);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .particle.large {
+            width: 15px;
+            height: 15px;
+            animation-duration: 8s;
+        }
+
+        .particle.medium {
+            width: 10px;
+            height: 10px;
+            animation-duration: 6s;
+        }
+
+        .particle.small {
+            width: 6px;
+            height: 6px;
+            animation-duration: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0) scale(1);
+                opacity: 0.3;
+            }
+            33% {
+                transform: translateY(-20px) translateX(10px) scale(1.1);
+                opacity: 0.8;
+            }
+            66% {
+                transform: translateY(-10px) translateX(-15px) scale(0.9);
+                opacity: 0.6;
+            }
+        }
+
+        /* تأثيرات الإضاءة المتحركة */
+        .glow-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(138, 43, 226, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(186, 85, 211, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(106, 27, 154, 0.1) 0%, transparent 50%);
+            animation: glowMove 10s ease-in-out infinite;
+        }
+
+        @keyframes glowMove {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.1) rotate(180deg);
+                opacity: 0.8;
+            }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* شاشة البداية */
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            position: relative;
+            z-index: 10;
+        }
+
+        .welcome-title {
+            font-size: 4rem;
+            background: linear-gradient(135deg, #e1bee7 0%, #ba68c8 25%, #9c27b0 50%, #6a1b9a 75%, #4a148c 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            text-shadow: 0 0 40px rgba(206, 80, 228, 0.6);
+            animation: titleGlow 3s ease-in-out infinite alternate;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .welcome-title::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(45deg, transparent, rgba(156, 39, 176, 0.1), transparent);
+            z-index: -1;
+            border-radius: 20px;
+            animation: borderGlow 4s linear infinite;
+        }
+
+        @keyframes titleGlow {
+            from { 
+                text-shadow: 
+                    0 0 20px rgba(156, 39, 176, 0.5),
+                    0 0 40px rgba(186, 85, 211, 0.3),
+                    0 0 60px rgba(138, 43, 226, 0.2);
+            }
+            to { 
+                text-shadow: 
+                    0 0 30px rgba(156, 39, 176, 0.8),
+                    0 0 60px rgba(186, 85, 211, 0.6),
+                    0 0 90px rgba(138, 43, 226, 0.4);
+            }
+        }
+
+        @keyframes borderGlow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .welcome-subtitle {
+            font-size: 1.4rem;
+            color: #e1bee7;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            text-shadow: 0 0 10px rgba(225, 190, 231, 0.3);
+        }
+
+        /* شاشة تجهيز الفرق وشاشة الفئات */
+        .team-setup, .category-screen {
+            display: none;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* تصميم خيارات الفئات */
+        .category-options {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        
+        .category-option {
+            flex: 1;
+            min-width: 250px;
+            max-width: 350px;
+            padding: 25px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(106, 27, 154, 0.3), rgba(106, 27, 154, 0.3));
+            border: 2px solid rgba(186, 85, 211, 0.5);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(15px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .category-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .category-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 20px 50px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(156, 39, 176, 0.4);
+            border-color: #ba68c8;
+        }
+        
+        .category-option:hover::before {
+            left: 100%;
+        }
+        
+        .category-option h3 {
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #e1bee7, #ba68c8);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+        
+        .category-option p {
+            color: #ce93d8;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+        
+        .category-option.selected {
+            border: 3px solid #9c27b0;
+            background: linear-gradient(135deg, rgba(156, 39, 176, 0.6), rgba(106, 27, 154, 0.8));
+            box-shadow: 
+                0 15px 40px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(156, 39, 176, 0.6);
+        }
+        
+        .category-option.selected h3 {
+            background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .category-option.selected p {
+            color: #f3e5f5;
+        }
+
+        .setup-title {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #e1bee7, #ba68c8, #9c27b0);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(186, 85, 211, 0.4);
+            font-weight: bold;
+        }
+
+        .setup-subtitle {
+            color: #ce93d8;
+            margin-bottom: 40px;
+            font-size: 1.2rem;
+        }
+
+        .teams-container {
+            display: flex;
+            justify-content: space-around;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .team-input-group {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .team-label {
+            display: block;
+            font-size: 1.4rem;
+            background: linear-gradient(135deg, #ba68c8, #9c27b0);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .team-input {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.2rem;
+            border: 2px solid #7b1fa2;
+            border-radius: 15px;
+            background: rgba(156, 39, 176, 0.1);
+            color: #fff;
+            text-align: center;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 
+                0 8px 32px rgba(123, 31, 162, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .team-input:focus {
+            outline: none;
+            border-color: #ba68c8;
+            box-shadow: 
+                0 0 30px rgba(186, 85, 211, 0.4),
+                0 8px 32px rgba(123, 31, 162, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            background: rgba(156, 39, 176, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .team-input::placeholder {
+            color: rgba(225, 190, 231, 0.6);
+        }
+
+        /* شاشة اللعب */
+        .game-screen {
+            display: none;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            position: relative;
+            width: 100%;
+            gap: 20px;
+        }
+
+        .team-score {
+            font-size: 1.3rem;
+            padding: 25px 40px;
+            font-weight: bold;
+            border-radius: 20px;
+            position: relative;
+            min-width: 280px;
+            text-align: center;
+            flex: 1;
+            max-width: 400px;
+            backdrop-filter: blur(15px);
+            box-shadow: 
+                0 10px 40px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .team1-score {
+            background: linear-gradient(135deg, rgba(106, 27, 154, 0.3), rgba(74, 20, 140, 0.5));
+            color: #e1bee7;
+            border: 2px solid #7b1fa2;
+        }
+
+        .team2-score {
+            background: linear-gradient(135deg, rgba(186, 85, 211, 0.3), rgba(156, 39, 176, 0.5));
+            color: #f3e5f5;
+            border: 2px solid #ba68c8;
+        }
+
+        .team-score:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 15px 50px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(156, 39, 176, 0.3);
+        }
+
+        .timer {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #ff6b35, #ff8a50);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            text-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
+            position: relative;
+        }
+
+        .timer::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.2) 0%, transparent 70%);
+            z-index: -1;
+            border-radius: 10px;
+            animation: timerPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes timerPulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .question-container {
+            background: linear-gradient(135deg, 
+                rgba(106, 27, 154, 0.2) 0%, 
+                rgba(74, 20, 140, 0.3) 50%, 
+                rgba(156, 39, 176, 0.2) 100%);
+            padding: 50px 30px;
+            border-radius: 25px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                0 0 40px rgba(156, 39, 176, 0.2);
+            border: 1px solid rgba(186, 85, 211, 0.3);
+        }
+
+        .question-number {
+            background: linear-gradient(135deg, #ff8a50, #ff6b35);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent; 
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 138, 80, 0.3);
+        }
+
+        .question-text {
+            font-size: 2rem;
+            color: #fff;
+            margin-bottom: 40px;
+            line-height: 1.6;
+            text-align: center;
+            font-weight: bold;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .answers-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-top: 40px;
+            max-width: 700px;
+            margin: 40px auto 0;
+        }
+
+        .answer-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 25px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+            background: #4b226d;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            outline: none;
+            user-select: none;
+            transform: skewX(-15deg);
+            transition: 0.5s;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: glow 2s infinite alternate;
+        }
+
+        .answer-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .answer-btn:hover {
+            transform: skewX(-15deg) translateY(-3px);
+            box-shadow: 
+                0 0 6px #4b226d, 
+                0 0 10px #4b226d;
+        }
+
+        .answer-btn:hover::before {
+            left: 100%;
+        }
+        
+        /* إضافة تأثير النص داخل الزر ليكون مستقيماً */
+        .answer-btn span {
+            display: inline-block;
+            transform: skewX(15deg);
+        }
+
+        .answer-btn.correct {
+            background: linear-gradient(135deg, #00c851, #007e33);
+            border-color: #00c851;
+            animation: correctGlow 0.8s ease;
+            box-shadow: 
+                0 0 40px rgba(0, 200, 81, 0.6),
+                0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .answer-btn.incorrect {
+            background: linear-gradient(135deg, #ff4444, #cc0000);
+            border-color: #ff4444;
+            animation: incorrectShake 0.8s ease;
+            box-shadow: 
+                0 0 40px rgba(255, 68, 68, 0.6),
+                0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        @keyframes correctGlow {
+            0% { transform: scale(1); }
+            50% { 
+                transform: scale(1.08); 
+                box-shadow: 
+                    0 0 60px rgba(0, 200, 81, 0.8),
+                    0 20px 50px rgba(0, 0, 0, 0.5);
+            }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes incorrectShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        /* رسالة الإجابة الصحيحة */
+        .correct-answer-message {
+            position: fixed;
+            top: 30px;
+            right: 50%;
+            transform: translateX(50%);
+            background: linear-gradient(135deg, 
+                rgba(0, 200, 81, 0.95) 0%, 
+                rgba(0, 126, 51, 0.95) 100%);
+            color: white;
+            padding: 20px 50px;
+            border-radius: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            z-index: 1000;
+            animation: slideDown 0.6s ease;
+            box-shadow: 
+                0 10px 40px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(0, 200, 81, 0.5);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            display: none;
+        }
+
+        .correct-answer-message.show {
+            display: block;
+        }
+
+        /* نافذة اختيار الفائز */
+        .winner-selection {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, 
+                rgba(74, 20, 140, 0.95) 0%, 
+                rgba(106, 27, 154, 0.95) 50%,
+                rgba(156, 39, 176, 0.95) 100%);
+            padding: 40px;
+            border-radius: 25px;
+            z-index: 1001;
+            text-align: center;
+            border: 2px solid rgba(186, 85, 211, 0.5);
+            backdrop-filter: blur(20px);
+            box-shadow: 
+                0 25px 80px rgba(0, 0, 0, 0.5),
+                0 0 50px rgba(156, 39, 176, 0.4);
+        }
+
+        .winner-selection.show {
+            display: block;
+            animation: popIn 0.5s ease;
+        }
+
+        @keyframes popIn {
+            0% { 
+                opacity: 0; 
+                transform: translate(-50%, -50%) scale(0.7); 
+            }
+            100% { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1); 
+            }
+        }
+
+        .winner-selection h3 {
+            color: #e1bee7;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            text-shadow: 0 0 15px rgba(225, 190, 231, 0.3);
+        }
+
+        .winner-buttons {
+            display: flex;
+            gap: 25px;
+            justify-content: center;
+        }
+
+        .winner-btn {
+            background: linear-gradient(135deg, #7b1fa2, #9c27b0, #ba68c8);
+            color: white;
+            padding: 15px 35px;
+            font-size: 1.3rem;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            font-weight: bold;
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .winner-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .winner-btn:hover {
+            background: linear-gradient(135deg, #9c27b0, #ba68c8, #ce93d8);
+            transform: translateY(-3px);
+            box-shadow: 
+                0 12px 35px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(186, 85, 211, 0.5);
+        }
+
+        .winner-btn:hover::before {
+            left: 100%;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateX(50%) translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(50%) translateY(0);
+            }
+        }
+            .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 11px 33px;
+            font-size: 20px;
+            font-weight: 600;
+            color: white;
+            background: #733e9e;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            outline: none;
+            width: 350px;
+            user-select: none;
+            transform: skewX(-15deg);
+            transition: 0.5s;
+            margin: 20px auto 0;
+            animation: glow 2s infinite alternate;
+        }
+
+        .btn:hover {
+            transform: skewX(-15deg) translateY(-3px);
+        }
+
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 3px #4c3d70, 0 0 6px #6e4da2;
+            }
+            to {
+                box-shadow: 0 0 6px #5d3e79, 0 0 10px #644da2;
+            }
+        }
+
+        /* شاشة النتائج */
+        .results-screen {
+            display: none;
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .results-title {
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, #e1bee7, #ba68c8, #9c27b0);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+            text-shadow: 0 0 30px rgba(225, 190, 231, 0.5);
+            font-weight: bold;
+        }
+
+        .winner-announcement {
+            font-size: 2.2rem;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, 
+                rgba(156, 39, 176, 0.3) 0%, 
+                rgba(106, 27, 154, 0.4) 50%,
+                rgba(74, 20, 140, 0.3) 100%);
+            border-radius: 25px;
+            border: 2px solid rgba(186, 85, 211, 0.5);
+            backdrop-filter: blur(15px);
+            box-shadow: 
+                0 15px 50px rgba(0, 0, 0, 0.3),
+                0 0 40px rgba(156, 39, 176, 0.3);
+        }
+
+        .final-scores {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 50px;
+            gap: 30px;
+        }
+
+        .final-score-card {
+            flex: 1;
+            padding: 30px;
+            border-radius: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            backdrop-filter: blur(15px);
+            box-shadow: 
+                0 15px 40px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .final-score-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .final-score-card.team1 {
+            background: linear-gradient(135deg, 
+                rgba(123, 31, 162, 0.8) 0%, 
+                rgba(106, 27, 154, 0.9) 100%);
+            color: white;
+            border: 2px solid #7b1fa2;
+        }
+
+        .final-score-card.team2 {
+            background: linear-gradient(135deg, 
+                rgba(186, 85, 211, 0.8) 0%, 
+                rgba(206, 147, 216, 0.9) 100%);
+            color: #1a0033;
+            border: 2px solid #ba68c8;
+        }
+
+        @media (max-width: 768px) {
+            .welcome-title {
+                font-size: 2.8rem;
+            }
+            
+            .teams-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .answers-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .game-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .team-score {
+                min-width: 250px;
+            }
+
+            .final-scores {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .category-options {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .category-option {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                font-size: 18px;
+                padding: 10px 20px;
+            }
+        }
+
+        /* تأثيرات إضافية للجسيمات المتحركة */
+        .sparkle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: sparkle 3s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes sparkle {
+            0% {
+                opacity: 0;
+                transform: scale(0) rotate(0deg);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1) rotate(180deg);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0) rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- تأثير الجسيمات -->
+    <div class="particles-container" id="particles"></div>
+    
+    <!-- تأثير الإضاءة المتحركة -->
+    <div class="glow-effect"></div>
+
+    <!-- شاشة البداية -->
+    <div class="welcome-screen" id="welcomeScreen">
+        <div class="container">
+            <h1 class="welcome-title">أسئلة رسبكت</h1>
+        <!-- شعار اللعبة -->
+        <img src="file:///C:/Users/asus/Downloads/rr.png" alt="شعار اللعبة" class="logo-image">
+<style>
+.logo-image {
+    width: 120px;
+    height: auto;
+    margin-bottom: 20px;
+    animation: logoPulse 3s ease-in-out infinite;
+
+    position: fixed;  /* تثبيت الصورة */
+    top: 10px;        /* 10 بيكسل من الأعلى */
+    right: 10px;      /* 10 بيكسل من اليمين */
+    z-index: 1000;    /* لتكون فوق العناصر الأخرى */
+}
+
+@keyframes logoPulse {
+    0%   { transform: scale(1); opacity: 0.8; }
+    50%  { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.8; }
+}
+</style>
+
+
+            <p class="welcome-subtitle">أدخل اسماء الفرق و اختر الفئات و ابدا </p>
+            <button class="btn" onclick="showTeamSetup()">اختر فريقك</button>
+        </div>
+    </div>
+
+    <!-- شاشة تجهيز الفرق -->
+    <div class="team-setup" id="teamSetup">
+        <div class="container">
+            <h2 class="setup-title">تجهيز الفرق</h2>
+            <p class="setup-subtitle">أدخل أسماء الفرق وتجهز للتحدي الأول</p>
+            
+            <div class="teams-container">
+                <div class="team-input-group">
+                    <label class="team-label">الفريق الأول</label>
+                    <input type="text" class="team-input" id="team1Name" placeholder="اسم الفريق الأول">
+                </div>
+                <div class="team-input-group">
+                    <label class="team-label">الفريق الثاني</label>
+                    <input type="text" class="team-input" id="team2Name" placeholder="اسم الفريق الثاني">
+                </div>
+            </div>
+            
+            <button class="btn" onclick="showCategoryScreen()">اختيار الفئات</button>
+        </div>
+    </div>
+
+    <!-- شاشة اختيار الفئات -->
+    <div class="category-screen" id="categoryScreen">
+        <div class="container">
+            <h2 class="setup-title">اختيار الفئات</h2>
+            <p class="setup-subtitle" id="categoryTeamName">اختر الفئة المناسبة</p>
+            
+            <div class="category-options">
+                <div class="category-option" onclick="selectCategory('places')">
+                    <h3>أماكن ريسبكت</h3>
+                    <p>أسئلة عن الأماكن المقدسة والتاريخية</p>
+                </div>
+                <div class="category-option" onclick="selectCategory('questions')">
+                    <h3>أسئلة ريسبكت</h3>
+                    <p>أسئلة عامة عن الدين والتاريخ الإسلامي</p>
+                </div>
+            </div>
+            
+            <button class="btn" onclick="startGame()">بدء المواجهة</button>
+        </div>
+    </div>
+
+    <!-- شاشة اللعب -->
+    <div class="game-screen" id="gameScreen">
+        <div class="container">
+            <div class="game-header">
+                <div class="team-score team1-score" id="team1Display">الفريق 1: 0</div>
+                <div class="timer" id="timer">01:00</div>
+                <div class="team-score team2-score" id="team2Display">الفريق 2: 0</div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number" id="questionNumber">100 نقطة</div>
+                <div class="question-text" id="questionText">ما هي أول وظيفة حكومية عمل بها عمر بن الخطاب؟</div>
+                <div class="answers-grid" id="answersGrid">
+                    <button class="answer-btn" onclick="selectAnswer(this, false)"><span>قاضي</span></button>
+                    <button class="answer-btn" onclick="selectAnswer(this, true)"><span>كاتب</span></button>
+                    <button class="answer-btn" onclick="selectAnswer(this, false)"><span>حارس</span></button>
+                    <button class="answer-btn" onclick="selectAnswer(this, false)"><span>تاجر</span></button>
+                </div>
+            </div>
+
+            <button class="btn" onclick="nextQuestion()" id="nextBtn" style="display: none;">السؤال التالي</button>
+        </div>
+    </div>
+
+    <!-- رسالة الإجابة الصحيحة -->
+    <div class="correct-answer-message" id="correctMessage">من أجاب صحيح؟</div>
+
+    <!-- نافذة اختيار الفائز -->
+    <div class="winner-selection" id="winnerSelection">
+        <h3>من أجاب على السؤال؟</h3>
+        <div class="winner-buttons">
+            <button class="winner-btn" onclick="selectWinner(1)" id="team1WinnerBtn">الفريق الأول</button>
+            <button class="winner-btn" onclick="selectWinner(2)" id="team2WinnerBtn">الفريق الثاني</button>
+        </div>
+    </div>
+
+    <!-- شاشة النتائج -->
+    <div class="results-screen" id="resultsScreen">
+        <div class="container">
+            <h2 class="results-title">انتهت المباراة!</h2>
+            <div class="winner-announcement" id="winnerText">الفريق الأول هو الفائز!</div>
+            <div class="final-scores">
+                <div class="final-score-card team1" id="finalTeam1">الفريق 1: 0</div>
+                <div class="final-score-card team2" id="finalTeam2">الفريق 2: 0</div>
+            </div>
+            <button class="btn" onclick="restartGame()">لعب مرة أخرى</button>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestionIndex = 0;
+        let team1Score = 0;
+        let team2Score = 0;
+        let currentTeam = 1;
+        let team1Name = "الفريق الأول";
+        let team2Name = "الفريق الثاني";
+        let timeLeft = 60;
+        let timer;
+        let questionAnswered = false;
+
+        // إنشاء الجسيمات
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // اختيار حجم عشوائي
+                const sizes = ['small', 'medium', 'large'];
+                particle.classList.add(sizes[Math.floor(Math.random() * sizes.length)]);
+                
+                // موضع عشوائي
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                
+                // تأخير عشوائي للأنيميشن
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // إنشاء تأثيرات البريق
+        function createSparkles() {
+            setInterval(() => {
+                const sparkle = document.createElement('div');
+                sparkle.classList.add('sparkle');
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.top = Math.random() * 100 + '%';
+                sparkle.style.width = sparkle.style.height = Math.random() * 4 + 2 + 'px';
+                
+                document.body.appendChild(sparkle);
+                
+                setTimeout(() => {
+                    sparkle.remove();
+                }, 3000);
+            }, 500);
+        }
+
+        // تشغيل التأثيرات عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            createSparkles();
+        });
+
+        // أسئلة فئة الأسئلة العامة
+        const questionsCategory = [
+            {
+                text: "ما هي أول وظيفة حكومية عمل بها عمر بن الخطاب؟",
+                answers: ["قاضي", "كاتب", "حارس", "تاجر"],
+                correct: 1,
+                points: 100
+            },
+            {
+                text: "من هو الصحابي الذي لُقب بـ 'الفاروق'؟",
+                answers: ["عثمان بن عفان", "عمر بن الخطاب", "علي بن أبي طالب", "أبو بكر الصديق"],
+                correct: 1,
+                points: 150
+            },
+            {
+                text: "في أي عام تم فتح مكة المكرمة؟",
+                answers: ["8 هجري", "9 هجري", "7 هجري", "10 هجري"],
+                correct: 0,
+                points: 200
+            },
+            {
+                text: "كم عدد أركان الإسلام؟",
+                answers: ["4", "5", "6", "7"],
+                correct: 1,
+                points: 100
+            },
+            {
+                text: "ما هي أطول سورة في القرآن الكريم؟",
+                answers: ["سورة البقرة", "سورة آل عمران", "سورة النساء", "سورة المائدة"],
+                correct: 0,
+                points: 150
+            }
+        ];
+
+        // أسئلة فئة الأماكن
+        const placesCategory = [
+            {
+                text: "أين يقع المسجد الأقصى؟",
+                answers: ["القدس", "مكة المكرمة", "المدينة المنورة", "دمشق"],
+                correct: 0,
+                points: 100
+            },
+            {
+                text: "ما هو أول مسجد بني في الإسلام؟",
+                answers: ["المسجد الحرام", "المسجد النبوي", "مسجد قباء", "مسجد الكوفة"],
+                correct: 2,
+                points: 150
+            },
+            {
+                text: "في أي مدينة تقع الكعبة المشرفة؟",
+                answers: ["مكة المكرمة", "المدينة المنورة", "الطائف", "جدة"],
+                correct: 0,
+                points: 100
+            },
+            {
+                text: "أين دفن النبي محمد صلى الله عليه وسلم؟",
+                answers: ["مكة المكرمة", "المدينة المنورة", "الطائف", "القدس"],
+                correct: 1,
+                points: 150
+            },
+            {
+                text: "ما هو الجبل الذي نزل عليه الوحي لأول مرة؟",
+                answers: ["جبل أحد", "جبل ثور", "جبل حراء", "جبل الطور"],
+                correct: 2,
+                points: 200
+            }
+        ];
+
+        // المجموعة الحالية من الأسئلة
+        let questions = [];
+        let selectedCategory = '';
+
+        function showTeamSetup() {
+            document.getElementById('welcomeScreen').style.display = 'none';
+            document.getElementById('teamSetup').style.display = 'block';
+        }
+
+        function showCategoryScreen() {
+            team1Name = document.getElementById('team1Name').value || "الفريق الأول";
+            team2Name = document.getElementById('team2Name').value || "الفريق الثاني";
+            
+            document.getElementById('teamSetup').style.display = 'none';
+            document.getElementById('categoryScreen').style.display = 'block';
+            document.getElementById('categoryTeamName').textContent = `${team1Name} و ${team2Name}، اختاروا الفئة المناسبة`;
+        }
+
+        function selectCategory(category) {
+            // إزالة التحديد من جميع الفئات
+            const categoryOptions = document.querySelectorAll('.category-option');
+            categoryOptions.forEach(option => option.classList.remove('selected'));
+            
+            // تحديد الفئة المختارة
+            const selectedOption = event.currentTarget;
+            selectedOption.classList.add('selected');
+            
+            // إضافة تأثير بصري عند الاختيار
+            const sparkle = document.createElement('div');
+            sparkle.classList.add('sparkle');
+            sparkle.style.width = sparkle.style.height = '100px';
+            sparkle.style.left = (selectedOption.offsetLeft + selectedOption.offsetWidth / 2) + 'px';
+            sparkle.style.top = (selectedOption.offsetTop + selectedOption.offsetHeight / 2) + 'px';
+            document.body.appendChild(sparkle);
+            
+            setTimeout(() => {
+                sparkle.remove();
+            }, 1000);
+            
+            // تعيين الفئة المختارة
+            selectedCategory = category;
+            
+            // تحديد مجموعة الأسئلة المناسبة
+            if (category === 'places') {
+                questions = [...placesCategory];
+                document.getElementById('categoryTeamName').textContent = `تم اختيار فئة: أماكن ريسبكت`;
+            } else if (category === 'questions') {
+                questions = [...questionsCategory];
+                document.getElementById('categoryTeamName').textContent = `تم اختيار فئة: أسئلة ريسبكت`;
+            }
+            
+            // تحريك زر بدء المواجهة للأعلى لجذب الانتباه
+            const startButton = document.querySelector('#categoryScreen .btn');
+            startButton.style.animation = 'none';
+            setTimeout(() => {
+                startButton.style.animation = 'glow 2s infinite alternate';
+            }, 10);
+        }
+
+        function startGame() {
+            // التأكد من اختيار فئة
+            if (!selectedCategory || questions.length === 0) {
+                alert("الرجاء اختيار فئة قبل بدء اللعبة");
+                return;
+            }
+            
+            document.getElementById('categoryScreen').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'block';
+            
+            // خلط الأسئلة لجعل اللعبة أكثر تشويقاً
+            questions = shuffleArray(questions);
+            
+            updateDisplay();
+            showQuestion();
+            startTimer();
+        }
+        
+        // دالة لخلط عناصر المصفوفة بشكل عشوائي
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        function updateDisplay() {
+            document.getElementById('team1Display').textContent = `${team1Name}: ${team1Score}`;
+            document.getElementById('team2Display').textContent = `${team2Name}: ${team2Score}`;
+        }
+
+        function showQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                endGame();
+                return;
+            }
+
+            const question = questions[currentQuestionIndex];
+            document.getElementById('questionNumber').textContent = `${question.points} نقطة`;
+            document.getElementById('questionText').textContent = question.text;
+            
+            const answersGrid = document.getElementById('answersGrid');
+            answersGrid.innerHTML = '';
+            
+            question.answers.forEach((answer, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn';
+                
+                // إضافة عنصر span حول النص لتصحيح الانحراف
+                const span = document.createElement('span');
+                span.textContent = answer;
+                btn.appendChild(span);
+                
+                btn.onclick = () => selectAnswer(btn, index === question.correct);
+                answersGrid.appendChild(btn);
+            });
+
+            questionAnswered = false;
+            document.getElementById('nextBtn').style.display = 'none';
+        }
+
+        function selectAnswer(btn, isCorrect) {
+            if (questionAnswered) return;
+            
+            questionAnswered = true;
+            
+            // إظهار الإجابات الصحيحة والخاطئة
+            const buttons = document.querySelectorAll('.answer-btn');
+            buttons.forEach((button, index) => {
+                if (index === questions[currentQuestionIndex].correct) {
+                    button.classList.add('correct');
+                } else if (button === btn && !isCorrect) {
+                    button.classList.add('incorrect');
+                }
+                button.style.pointerEvents = 'none';
+            });
+
+            // إذا كانت الإجابة صحيحة، إظهار نافذة اختيار الفائز
+            if (isCorrect) {
+                // إظهار رسالة "من أجاب صحيح؟"
+                const message = document.getElementById('correctMessage');
+                message.classList.add('show');
+                
+                // تحديث أسماء الأزرار في نافذة الاختيار
+                document.getElementById('team1WinnerBtn').textContent = team1Name;
+                document.getElementById('team2WinnerBtn').textContent = team2Name;
+                
+                // إظهار نافذة اختيار الفائز
+                setTimeout(() => {
+                    document.getElementById('winnerSelection').classList.add('show');
+                }, 500);
+            } else {
+                // إذا كانت الإجابة خاطئة، التبديل للفريق التالي مباشرة
+                currentTeam = currentTeam === 1 ? 2 : 1;
+                setTimeout(() => {
+                    document.getElementById('nextBtn').style.display = 'block';
+                }, 1500);
+            }
+        }
+
+        function selectWinner(winningTeam) {
+            // إخفاء الرسالة ونافذة الاختيار
+            document.getElementById('correctMessage').classList.remove('show');
+            document.getElementById('winnerSelection').classList.remove('show');
+            
+            // إضافة النقاط للفريق الفائز
+            if (winningTeam === 1) {
+                team1Score += questions[currentQuestionIndex].points;
+            } else {
+                team2Score += questions[currentQuestionIndex].points;
+            }
+            updateDisplay();
+            
+            // التبديل للفريق التالي
+            currentTeam = currentTeam === 1 ? 2 : 1;
+            
+            setTimeout(() => {
+                document.getElementById('nextBtn').style.display = 'block';
+            }, 500);
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            showQuestion();
+            
+            // إعادة تشغيل المؤقت للسؤال الجديد
+            clearInterval(timer);
+            timeLeft = 60;
+            startTimer();
+        }
+
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById('timer').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    // الانتقال للسؤال التالي تلقائياً إذا انتهى الوقت
+                    if (!questionAnswered) {
+                        currentTeam = currentTeam === 1 ? 2 : 1;
+                        nextQuestion();
+                    }
+                }
+            }, 1000);
+        }
+
+        function endGame() {
+            clearInterval(timer);
+            document.getElementById('gameScreen').style.display = 'none';
+            document.getElementById('resultsScreen').style.display = 'block';
+            
+            const winnerText = document.getElementById('winnerText');
+            if (team1Score > team2Score) {
+                winnerText.textContent = `🏆 ${team1Name} هو الفائز! 🏆`;
+            } else if (team2Score > team1Score) {
+                winnerText.textContent = `🏆 ${team2Name} هو الفائز! 🏆`;
+            } else {
+                winnerText.textContent = "🤝 تعادل! كلا الفريقين رائع! 🤝";
+            }
+            
+            document.getElementById('finalTeam1').textContent = `${team1Name}: ${team1Score}`;
+            document.getElementById('finalTeam2').textContent = `${team2Name}: ${team2Score}`;
+        }
+
+        function restartGame() {
+            currentQuestionIndex = 0;
+            team1Score = 0;
+            team2Score = 0;
+            currentTeam = 1;
+            timeLeft = 60;
+            selectedCategory = '';
+            questions = [];
+            
+            // إعادة تعيين تحديد الفئات
+            const categoryOptions = document.querySelectorAll('.category-option');
+            categoryOptions.forEach(option => option.classList.remove('selected'));
+            
+            document.getElementById('resultsScreen').style.display = 'none';
+            document.getElementById('welcomeScreen').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
